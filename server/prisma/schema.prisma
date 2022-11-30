@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -45,6 +46,8 @@ model Product {
   updatedAt  DateTime  @updatedAt
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
+
+  @@index([categoryId])
 }
 
 // npx prisma migrate dev --name init

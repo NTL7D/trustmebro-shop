@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
+    "engines": {
+        "node": "18.x"
+    },
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",
         "@types/cookie-parser": "^1.4.3",

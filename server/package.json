@@ -33,10 +33,9 @@
         "rimraf": "^3.0.2"
     },
     "scripts": {
-        "prestart": "tsc",
-        "start": "cross-env NODE_ENV=production node ./dist/server.js",
-        "dev": "nodemon --files ./src/server.ts",
-        "test": "node --trace-deprecation ./src/server.ts",
+        "start": "node ./dist/server.js",
+        "dev": "nodemon ./src/server.ts",
+        "build": "tsc",
         "typecheck": "tsc --noEmit"
     }
 }

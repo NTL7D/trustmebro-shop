@@ -17,9 +17,7 @@ const main = async () => {
     app.use("/api", router);
     //start
     app.listen(port, () => {
-        console.log(
-            `Listening on port ${port}\nurl: http://localhost:${port}`
-        );
+        console.log(`Listening on port ${port}`);
     });
 };
 main().catch((err) => {

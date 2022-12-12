@@ -3,4 +3,4 @@ dist
 *.txt
 # Keep environment variables out of version control
 .env
-migrations
+D:\code\oo\server\prisma\migrations

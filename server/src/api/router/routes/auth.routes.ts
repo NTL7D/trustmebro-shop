@@ -1,11 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import auth from "../../middleware/auth";
 import userCtrl from "../../controller/userCtrl";
 
-const authRouter = express.Router();
-authRouter.post("/signup", userCtrl.signup);
-authRouter.post("/signin", userCtrl.signin);
-authRouter.get("/signout", userCtrl.signout);
-authRouter.get("/info", auth, userCtrl.getInfo);
-authRouter.get("/refreshtoken", userCtrl.refreshToken);
-export default authRouter;
+export const router = Router();
+
+router.post("/signup", userCtrl.signup);
+router.post("/signin", userCtrl.signin);
+router.get("/signout", userCtrl.signout);
+router.get("/info", auth, userCtrl.getInfo);
+router.get("/refreshtoken", userCtrl.refreshToken);

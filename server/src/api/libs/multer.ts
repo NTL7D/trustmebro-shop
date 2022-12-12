@@ -1,37 +1,48 @@
 import { Request } from "express";
+import path from "path";
 import multer, { FileFilterCallback } from "multer";
+
 type DestinationCallback = (err: Error | null, destination: string) => void;
 type FilenameCallback = (err: Error | null, filename: string) => void;
 
-export const productStorage = multer.diskStorage({
+const productStorage = multer.diskStorage({
     destination: (
         req: Request,
         file: Express.Multer.File,
-        callback: DestinationCallback
+        cb: DestinationCallback
     ): void => {
-        callback(null, "images");
+        cb(null, "./public/upload");
     },
     filename: (
         req: Request,
         file: Express.Multer.File,
-        callback: FilenameCallback
+        cb: FilenameCallback
     ): void => {
-        callback(null, `${Date.now()}-${file.originalname}`);
+        cb(null, `${Date.now()}-${file.originalname}`);
     },
 });
 
-export const filter = (
+const fileFilter = (
     req: Request,
     file: Express.Multer.File,
-    callback: FileFilterCallback
+    cb: FileFilterCallback
 ): void => {
-    if (
-        file.mimetype === "image/jpg" ||
-        file.mimetype === "image/jpeg" ||
-        file.mimetype === "image/png"
-    ) {
-        callback(null, true);
+    const filetypes = /jpeg|jpg|png/;
+    const extname = filetypes.test(
+        path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype && extname) {
+        return cb(null, true);
     } else {
-        callback(null, false);
+        cb(Error("Alert: Image Only"));
     }
 };
+
+const upload = multer({
+    storage: productStorage,
+    limits: { fileSize: 8 * 1024 * 1024 },
+    fileFilter: fileFilter,
+});
+
+export { upload };

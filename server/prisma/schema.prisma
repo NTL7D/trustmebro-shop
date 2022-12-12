@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -39,15 +39,28 @@ model Product {
   name       String    @unique @db.VarChar(100)
   desc       String?   @db.VarChar(255)
   price      Int       @default(0)
-  image      String
   checked    Boolean   @default(false)
   sold       Int       @default(0)
   createAt   DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
+  Image      Image?    @relation(fields: [imageId], references: [id])
+  imageId    Int?
 
   @@index([categoryId])
+  @@index([imageId])
+}
+
+model Image {
+  id       Int       @id @default(autoincrement())
+  publicId String    @unique
+  url      String    @unique @db.VarChar(255)
+  name     String
+  size     Int
+  format   String    @db.Char(4)
+  createAt DateTime  @default(now())
+  product  Product[]
 }
 
 // npx prisma migrate dev --name init

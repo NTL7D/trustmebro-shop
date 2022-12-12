@@ -1,9 +1,17 @@
-import { HomePage, LoginPage, RegisterPage, ErrorPage } from "../pages";
+import {
+    HomePage,
+    LoginPage,
+    RegisterPage,
+    CartPage,
+    ErrorPage,
+    NoHeaderLayout,
+} from "../components";
 
 const publicRoutes = [
     { path: "/", component: HomePage },
-    { path: "/login", component: LoginPage },
-    { path: "/register", component: RegisterPage },
+    { path: "/signin", component: LoginPage, layout: NoHeaderLayout },
+    { path: "/signup", component: RegisterPage, layout: NoHeaderLayout },
+    { path: "/cart", component: CartPage },
     { path: "*", component: ErrorPage },
 ];
 

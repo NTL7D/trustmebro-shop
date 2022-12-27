@@ -27,12 +27,11 @@ const fileFilter = (
     file: Express.Multer.File,
     cb: FileFilterCallback
 ): void => {
-    const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(
-        path.extname(file.originalname).toLowerCase()
-    );
-    const mimetype = filetypes.test(file.mimetype);
-    if (mimetype && extname) {
+    if (
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg"
+    ) {
         return cb(null, true);
     } else {
         cb(Error("Alert: Image Only"));

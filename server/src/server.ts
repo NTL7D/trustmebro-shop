@@ -13,8 +13,6 @@ const main = async () => {
     app.use(cookieParser());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    //public folders
-    app.use(express.static("./public"));
     //router
     app.use("/api", router);
     //start

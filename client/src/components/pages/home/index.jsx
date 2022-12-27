@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalState } from "../../../GlobalState";
 import { Helmet } from "react-helmet-async";
+import ProductItem from "../../utils/item";
+import Loading from "../../utils/loading";
 
+import "./style.scss";
 const HomePage = () => {
+    const state = useContext(GlobalState);
+    const [products] = state.productAPI.products;
+    const [isAdmin] = state.userAPI.isAdmin;
+    console.log(state);
     return (
-        <div>
+        <>
             <Helmet>
                 <title>TrustMeBro - Trang chủ</title>
             </Helmet>
-            <h2>Home Page</h2>
-        </div>
+            <div className='products'>
+                {products.map((product) => {
+                    return (
+                        <ProductItem
+                            key={product.id}
+                            product={product}
+                            isadmin={isAdmin}
+                        />
+                    );
+                })}
+            </div>
+            {products.length === 0 && <Loading />}
+        </>
     );
 };
 

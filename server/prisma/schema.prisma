@@ -11,13 +11,16 @@ datasource db {
   relationMode = "prisma"
 }
 
+//USER MODELS
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String   @db.VarChar(25)
-  email    String   @unique @db.VarChar(50)
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(25)
+  email    String    @unique @db.VarChar(50)
   password String
-  createAt DateTime @default(now())
-  role     Role     @default(USER)
+  createAt DateTime  @default(now())
+  role     Role      @default(USER)
+  cart     Cart[]
+  payment  Payment[]
 }
 
 enum Role {
@@ -25,16 +28,17 @@ enum Role {
   USER
 }
 
+//PRODUCT MODELS
 model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique @db.VarChar(50)
-  desc     String?   @db.VarChar(255)
-  createAt DateTime  @default(now())
-  updateAt DateTime  @updatedAt
-  product  Product[]
+  id       Int        @id @default(autoincrement())
+  name     String     @unique @db.VarChar(50)
+  desc     String?    @db.VarChar(255)
+  createAt DateTime   @default(now())
+  updateAt DateTime   @updatedAt
+  product  Products[]
 }
 
-model Product {
+model Products {
   id         Int       @id @default(autoincrement())
   name       String    @unique @db.VarChar(100)
   desc       String?   @db.VarChar(255)
@@ -43,6 +47,8 @@ model Product {
   sold       Int       @default(0)
   createAt   DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  detail     Order[]
+  //foreign key
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
   Image      Image?    @relation(fields: [imageId], references: [id])
@@ -53,14 +59,60 @@ model Product {
 }
 
 model Image {
-  id       Int       @id @default(autoincrement())
-  publicId String    @unique
-  url      String    @unique @db.VarChar(255)
+  id       Int        @id @default(autoincrement())
+  publicId String     @unique
+  url      String     @unique @db.VarChar(255)
   name     String
   size     Int
-  format   String    @db.Char(4)
-  createAt DateTime  @default(now())
-  product  Product[]
+  format   String     @db.Char(4)
+  createAt DateTime   @default(now())
+  product  Products[]
+}
+
+//CART MODELS
+model Cart {
+  id      Int       @id @default(autoincrement())
+  user    User?     @relation(fields: [userId], references: [id])
+  userId  Int?
+  detail  Order[]
+  payment Payment[]
+
+  @@index([userId])
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  quantity   Int
+  price      Int
+  createdAt  DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  //foreign key
+  Cart       Cart?     @relation(fields: [cartId], references: [id])
+  cartId     Int?
+  Products   Products? @relation(fields: [productsId], references: [id])
+  productsId Int?
+
+  @@index([cartId])
+  @@index([productsId])
+}
+
+//PAYMENT MODELS
+model Payment {
+  id       Int      @id @default(autoincrement())
+  status   Boolean  @default(false)
+  name     String
+  email    String
+  adress   String
+  total    Int
+  //foreign key
+  Cart     Cart?    @relation(fields: [cartId], references: [id])
+  cartId   Int?
+  User     User?    @relation(fields: [userId], references: [id])
+  userId   Int?
+  createAt DateTime @default(now())
+
+  @@index([cartId])
+  @@index([userId])
 }
 
 // npx prisma migrate dev --name init

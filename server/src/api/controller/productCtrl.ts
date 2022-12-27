@@ -6,7 +6,7 @@ const productCtrl = {
     getProduct: async (req: Request, res: Response) => {
         const { name, skip, take, orderBy } = req.query;
         try {
-            const productName: Prisma.ProductWhereInput = name
+            const productName: Prisma.ProductsWhereInput = name
                 ? {
                       OR: [
                           {
@@ -15,11 +15,15 @@ const productCtrl = {
                       ],
                   }
                 : {};
-            const getProduct = await prisma.product.findMany({
+            const getProduct = await prisma.products.findMany({
                 take: Number(take) || undefined,
                 skip: Number(skip) || undefined,
                 where: {
                     ...productName,
+                },
+                include: {
+                    Image: true,
+                    Category: true,
                 },
                 orderBy: {
                     //asc or desc only
@@ -33,6 +37,25 @@ const productCtrl = {
             });
         }
     },
+    getById: async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            const findProduct = await prisma.products.findUnique({
+                where: {
+                    id: Number(id),
+                },
+                include: {
+                    Image: true,
+                    Category: true,
+                },
+            });
+            res.json(findProduct);
+        } catch (err: any) {
+            res.status(500).json({
+                msg: err.message,
+            });
+        }
+    },
     createProduct: async (req: Request, res: Response) => {
         const { name, desc, price, category, image } = req.body;
         try {
@@ -40,7 +63,7 @@ const productCtrl = {
                 return res.status(400).json({ msg: "no image uploaded" });
             }
 
-            const find = await prisma.product.findUnique({
+            const find = await prisma.products.findUnique({
                 where: {
                     name: String(name),
                 },
@@ -51,7 +74,7 @@ const productCtrl = {
                 });
             }
 
-            const createProduct = await prisma.product.create({
+            const createProduct = await prisma.products.create({
                 data: {
                     name: String(name),
                     desc: String(desc),
@@ -76,7 +99,7 @@ const productCtrl = {
         const id = req.params.id;
         const { name, desc, price, category, image } = req.body;
         try {
-            const updateProduct = await prisma.product.update({
+            const updateProduct = await prisma.products.update({
                 where: {
                     id: Number(id),
                 },
@@ -107,7 +130,7 @@ const productCtrl = {
     deleteProduct: async (req: Request, res: Response) => {
         const id = req.params.id;
         try {
-            const deleteProduct = await prisma.product.delete({
+            const deleteProduct = await prisma.products.delete({
                 where: {
                     id: Number(id),
                 },

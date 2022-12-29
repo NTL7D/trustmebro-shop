@@ -16,17 +16,12 @@ const productCtrl = {
                   }
                 : {};
             const getProduct = await prisma.products.findMany({
-                take: Number(take) || undefined,
                 skip: Number(skip) || undefined,
+                take: Number(take) || undefined,
                 where: {
                     ...productName,
                 },
-                include: {
-                    image: true,
-                    category: true,
-                },
                 orderBy: {
-                    //asc or desc only
                     updatedAt: orderBy as Prisma.SortOrder,
                 },
             });

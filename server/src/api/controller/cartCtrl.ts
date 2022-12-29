@@ -21,7 +21,7 @@ const cartCtrl = {
                         },
                         item: {
                             create: {
-                                product: {
+                                products: {
                                     connect: {
                                         name: String(order.name),
                                     },
@@ -46,7 +46,7 @@ const cartCtrl = {
                         },
                         item: {
                             create: {
-                                product: {
+                                products: {
                                     connect: {
                                         name: String(order.name),
                                     },

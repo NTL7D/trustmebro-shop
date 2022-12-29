@@ -6,7 +6,7 @@ const productCtrl = {
     getProduct: async (req: Request, res: Response) => {
         const { name, skip, take, orderBy } = req.query;
         try {
-            const productName: Prisma.ProductsWhereInput = name
+            const productName: Prisma.productsWhereInput = name
                 ? {
                       OR: [
                           {
@@ -22,8 +22,8 @@ const productCtrl = {
                     ...productName,
                 },
                 include: {
-                    Image: true,
-                    Category: true,
+                    image: true,
+                    category: true,
                 },
                 orderBy: {
                     //asc or desc only
@@ -45,8 +45,8 @@ const productCtrl = {
                     id: Number(id),
                 },
                 include: {
-                    Image: true,
-                    Category: true,
+                    image: true,
+                    category: true,
                 },
             });
             res.json(findProduct);
@@ -79,12 +79,12 @@ const productCtrl = {
                     name: String(name),
                     desc: String(desc),
                     price: Number(price),
-                    Category: {
+                    category: {
                         connect: {
                             name: String(category),
                         },
                     },
-                    Image: {
+                    image: {
                         connect: {
                             url: String(image),
                         },
@@ -107,12 +107,12 @@ const productCtrl = {
                     name: String(name),
                     desc: String(desc),
                     price: Number(price),
-                    Category: {
+                    category: {
                         connect: {
                             name: String(category),
                         },
                     },
-                    Image: {
+                    image: {
                         connect: {
                             url: String(image),
                         },

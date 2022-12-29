@@ -3,7 +3,7 @@ import prisma from "../libs/prisma";
 
 const cartCtrl = {
     addCart: async (req: Request, res: Response) => {
-        const { order } = req.body?.cart;
+        const { order } = req.body.cart;
         try {
             const findCart = await prisma.cart.findUnique({
                 where: {
@@ -16,14 +16,14 @@ const cartCtrl = {
                     data: {
                         user: {
                             connect: {
-                                id: req.user.id,
+                                id: Number(req.user.id),
                             },
                         },
                         item: {
                             create: {
-                                Products: {
+                                product: {
                                     connect: {
-                                        name: String(req.body.cart?.name),
+                                        name: String(order.name),
                                     },
                                 },
                                 quantity: Number(order.quantity),
@@ -46,7 +46,7 @@ const cartCtrl = {
                         },
                         item: {
                             create: {
-                                Products: {
+                                product: {
                                     connect: {
                                         name: String(order.name),
                                     },

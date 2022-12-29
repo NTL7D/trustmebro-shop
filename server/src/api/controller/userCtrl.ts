@@ -19,7 +19,7 @@ const userCtrl = {
                 });
             }
             //check password length
-            if (password?.length < 6) {
+            if (password.length < 6) {
                 return res.status(400).json({
                     msg: "Password must be at least 6 characters",
                 });
@@ -148,31 +148,6 @@ const userCtrl = {
                 msg: err.message,
             });
         }
-    },
-    getCart: async (req: Request, res: Response) => {
-        const id = req.params.id;
-        const findCart = await prisma.cart.findMany({
-            where: {
-                id: Number(id),
-            },
-            include: {
-                user: {
-                    select: {
-                        name: true,
-                        email: true,
-                    },
-                },
-                item: {
-                    select: {
-                        productsId: true,
-                        quantity: true,
-                        price: true,
-                    },
-                },
-            },
-        });
-
-        res.json(findCart);
     },
 };
 

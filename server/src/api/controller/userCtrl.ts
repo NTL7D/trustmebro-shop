@@ -43,7 +43,7 @@ const userCtrl = {
                 path: "/api/auth/refreshtoken",
             });
 
-            res.json({ accesstoken });
+            res.json({ newUser, accesstoken });
         } catch (err: any) {
             res.status(500).json({
                 msg: err.message,
@@ -53,19 +53,22 @@ const userCtrl = {
     signin: async (req: Request, res: Response) => {
         const { email, password } = req.body;
         try {
-            const user = await prisma.user.findUnique({
+            const findUser = await prisma.user.findUnique({
                 where: {
                     email: String(email),
                 },
             });
             //check if user is exist
-            if (!user) {
+            if (!findUser) {
                 return res.status(400).json({
                     msg: "user not found",
                 });
             }
             //compare password
-            const isMatch = await bcrypt.compare(password, user.password);
+            const isMatch = await bcrypt.compare(
+                String(password),
+                String(findUser.password)
+            );
             if (!isMatch) {
                 return res.status(400).json({
                     msg: "email or password is incorrect",
@@ -73,8 +76,8 @@ const userCtrl = {
             }
 
             //if login success, create access token and refresh token
-            const accesstoken = createAccessToken({ id: user.id });
-            const refreshtoken = createRefreshToken({ id: user.id });
+            const accesstoken = createAccessToken({ id: findUser.id });
+            const refreshtoken = createRefreshToken({ id: findUser.id });
 
             res.cookie("refreshtoken", refreshtoken, {
                 httpOnly: true,

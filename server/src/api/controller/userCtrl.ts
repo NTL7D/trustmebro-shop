@@ -7,12 +7,6 @@ const userCtrl = {
     signup: async (req: Request, res: Response) => {
         const { name, email, password } = req.body;
         try {
-            //check if user input are null
-            if (name === null || email === null || password === null) {
-                return res.status(400).json({
-                    msg: "Please fill your information",
-                });
-            }
             // check duplicate email
             const findUser = await prisma.user.findUnique({
                 where: {

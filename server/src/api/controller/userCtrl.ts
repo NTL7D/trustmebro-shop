@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../libs/prisma";
-import bcrypt from "bcrypt";
+import bcrypt, { genSalt } from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const userCtrl = {
@@ -25,7 +25,8 @@ const userCtrl = {
                 });
             }
             //password encryption
-            const hashPass = await bcrypt.hash(password, 10);
+            const salt = await bcrypt.genSalt(10);
+            const hashPass = await bcrypt.hash(String(password), salt);
             //register
             const newUser = await prisma.user.create({
                 data: {

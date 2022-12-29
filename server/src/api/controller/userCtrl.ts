@@ -19,7 +19,7 @@ const userCtrl = {
                 });
             }
             //check password length
-            if (password.length < 6) {
+            if (password?.length < 6) {
                 return res.status(400).json({
                     msg: "Password must be at least 6 characters",
                 });

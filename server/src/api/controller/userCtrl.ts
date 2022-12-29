@@ -120,7 +120,6 @@ const userCtrl = {
                     msg: "User not found",
                 });
             }
-
             res.json({ user });
         } catch (err: any) {
             res.status(500).json({
@@ -155,6 +154,31 @@ const userCtrl = {
                 msg: err.message,
             });
         }
+    },
+    getCart: async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const findCart = await prisma.cart.findMany({
+            where: {
+                id: Number(id),
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                    },
+                },
+                item: {
+                    select: {
+                        productsId: true,
+                        quantity: true,
+                        price: true,
+                    },
+                },
+            },
+        });
+
+        res.json(findCart);
     },
 };
 

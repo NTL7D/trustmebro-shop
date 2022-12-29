@@ -6,7 +6,7 @@ import "./style.scss";
 function CartPage() {
     const [total, setTotal] = useState(0);
     const state = useContext(GlobalState);
-    const [cart] = state.userAPI.Cart;
+    const [cart] = state.userAPI.cart;
 
     if (cart.length === 0) {
         return (
@@ -53,22 +53,27 @@ function CartPage() {
             {cart.map((item) => {
                 return (
                     <div className='cart-box' key={item.id}>
-                        <img src={item.Image?.url} alt='' />
+                        <img
+                            src={item.Image?.url}
+                            alt=''
+                            className='img-container'
+                        />
                         <div className='box-detail'>
                             <h2>{item.name}</h2>
                             <h3>{item.price * item.quantity} đồng</h3>
                             <p>{item.desc}</p>
-                        </div>
-                        <div className='cart-amount'>
-                            <button>+</button>
-                            <span>{item.quantity}</span>
-                            <button>-</button>
+                            <div className='cart-amount'>
+                                <button>+</button>
+                                <span>{item.quantity}</span>
+                                <button>-</button>
+                            </div>
+                            <div className='cart-delete'>x</div>
                         </div>
                     </div>
                 );
             })}
             <div className='cart-total'>
-                <h3>Tổng: 0 đồng</h3>
+                <h3>Tổng: {total} đồng</h3>
                 <Link to='#!'>Thanh toán</Link>
             </div>
         </div>

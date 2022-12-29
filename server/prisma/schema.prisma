@@ -13,14 +13,13 @@ datasource db {
 
 //USER MODELS
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String    @db.VarChar(25)
-  email    String    @unique @db.VarChar(50)
+  id       Int      @id @default(autoincrement())
+  name     String   @db.VarChar(25)
+  email    String   @unique @db.VarChar(50)
   password String
-  createAt DateTime  @default(now())
-  role     Role      @default(USER)
-  cart     Cart[]
-  payment  Payment[]
+  createAt DateTime @default(now())
+  role     Role     @default(USER)
+  Cart     Cart?
 }
 
 enum Role {
@@ -39,15 +38,16 @@ model Category {
 }
 
 model Products {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique @db.VarChar(100)
-  desc       String?   @db.VarChar(255)
-  price      Int       @default(0)
-  checked    Boolean   @default(false)
-  sold       Int       @default(0)
-  createAt   DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  detail     Order[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100)
+  desc      String?  @db.VarChar(255)
+  price     Int      @default(0)
+  checked   Boolean  @default(false)
+  sold      Int      @default(0)
+  item      Item[]
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   //foreign key
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
@@ -71,48 +71,46 @@ model Image {
 
 //CART MODELS
 model Cart {
-  id      Int       @id @default(autoincrement())
-  user    User?     @relation(fields: [userId], references: [id])
-  userId  Int?
-  detail  Order[]
-  payment Payment[]
-
-  @@index([userId])
+  id       Int      @id @default(autoincrement())
+  item     Item[]
+  payment  Payment?
+  status   Boolean  @default(false)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  //foreign key
+  user     User?    @relation(fields: [userId], references: [id])
+  userId   Int      @unique
 }
 
-model Order {
+model Item {
   id         Int       @id @default(autoincrement())
-  quantity   Int
+  quantity   Int       @default(1)
   price      Int
-  createdAt  DateTime  @default(now())
+  createAt   DateTime  @default(now())
   updateAt   DateTime  @updatedAt
   //foreign key
-  Cart       Cart?     @relation(fields: [cartId], references: [id])
-  cartId     Int?
   Products   Products? @relation(fields: [productsId], references: [id])
   productsId Int?
+  Cart       Cart?     @relation(fields: [cartId], references: [id])
+  cartId     Int?
 
-  @@index([cartId])
   @@index([productsId])
+  @@index([cartId])
 }
 
-//PAYMENT MODELS
+//PAYMENT MODEL
 model Payment {
   id       Int      @id @default(autoincrement())
-  status   Boolean  @default(false)
   name     String
   email    String
-  adress   String
+  adress   String   @db.VarChar(255)
   total    Int
-  //foreign key
-  Cart     Cart?    @relation(fields: [cartId], references: [id])
-  cartId   Int?
-  User     User?    @relation(fields: [userId], references: [id])
-  userId   Int?
+  status   Boolean  @default(false)
   createAt DateTime @default(now())
-
-  @@index([cartId])
-  @@index([userId])
+  updateAt DateTime @updatedAt
+  //foreign key
+  cart     Cart?    @relation(fields: [cartId], references: [id])
+  cartId   Int      @unique
 }
 
 // npx prisma migrate dev --name init

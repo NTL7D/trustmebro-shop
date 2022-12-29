@@ -9,3 +9,4 @@ router.post("/signin", userCtrl.signin);
 router.get("/signout", userCtrl.signout);
 router.get("/info", auth, userCtrl.getInfo);
 router.get("/refreshtoken", userCtrl.refreshToken);
+

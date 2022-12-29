@@ -31,7 +31,7 @@ function UserAPI(token) {
 
     const addCart = async (product) => {
         if (!isLoggedIn) {
-            return alert("You must be logged in to continue buying");
+            return alert("Đăng nhập rồi mới được mua");
         }
 
         const check = cart.every((item) => {
@@ -42,6 +42,21 @@ function UserAPI(token) {
 
         if (check) {
             setCart([...cart, { ...product, quantity: 1 }]);
+            try {
+                await axios.post(
+                    "/api/cart/add",
+                    {
+                        cart: [...cart, { ...product, quantity: 1 }],
+                    },
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    }
+                );
+            } catch (err) {
+                console.log(err.response?.data.msg);
+            }
         } else {
             alert("Hàng thêm vô giỏ rồi má");
         }
@@ -50,7 +65,7 @@ function UserAPI(token) {
     return {
         isLogin: [isLoggedIn, setIsLoggedIn],
         isAdmin: [isAdmin, setIsAdmin],
-        Cart: [cart, setCart],
+        cart: [cart, setCart],
         addCart: addCart,
     };
 }

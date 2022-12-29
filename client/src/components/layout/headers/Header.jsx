@@ -13,7 +13,7 @@ const Header = () => {
     const state = useContext(GlobalState);
     const [isLoggedIn, setIsLoggedIn] = state.userAPI.isLogin;
     const [isAdmin, setIsAdmin] = state.userAPI.isAdmin;
-    const [cart] = state.userAPI.Cart;
+    const [cart] = state.userAPI.cart;
 
     const logoutHandler = async () => {
         await axios.get("/api/auth/signout");

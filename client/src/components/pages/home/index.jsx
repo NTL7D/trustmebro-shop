@@ -7,7 +7,7 @@ import Loading from "../../utils/loading";
 import "./style.scss";
 const HomePage = () => {
     const state = useContext(GlobalState);
-    const [products] = state.productAPI.products;
+    const [products] = state.productAPI?.products;
     const [isAdmin] = state.userAPI.isAdmin;
     console.log(state);
     return (
